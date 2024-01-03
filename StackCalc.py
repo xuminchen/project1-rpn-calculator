@@ -10,23 +10,34 @@ class StackCalc(Stack):
     def __init__(self):
         super().__init__()
 
-    def add(self):
-        pass
+    @staticmethod
+    def postfix2infix(postfix):
+        myqueue = postfix
+        infix_stack= []
+        while not myqueue.isEmpty():
+            token = myqueue.dequeue()
 
-    def multiply(self):
-        pass
+            if token in ('+', '-', '*', '/'):
+                rightOperand = infix_stack.pop()
+                leftOperand = infix_stack.pop()
+                infixSubstring = "(" + leftOperand + token + rightOperand + ")"
+                infix_stack.append(infixSubstring)
+            elif token == '^':
+                rightOperand = infix_stack.pop()
+                leftOperand = infix_stack.pop()
+                infixSubstring = "(" + leftOperand   + ")**"+ rightOperand
+                infix_stack.append(infixSubstring)
+            elif token in ('sin', 'cos', 'exp', 'log', 'abs', 'sqrt'):
+                operand = infix_stack.pop()
+                infixSubstring = token + "(" + operand + ")"
+                infix_stack.append(infixSubstring)
+            elif token in ('pi', 'e'):
+                infix_stack.append(token)
+            else:
+                infix_stack.append(token)
 
-    def sqrt(self):
-        pass
+        return infix_stack[0]
 
-    def minus(self):
-        pass
-
-    def divide(self):
-        pass
-
-    def power(self):
-        pass
 
     def rpnCommand(self, prompt):
         if prompt in ('swap', 'copy', 'flush'):
