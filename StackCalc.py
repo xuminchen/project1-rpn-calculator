@@ -11,9 +11,9 @@ class StackCalc(Stack):
         super().__init__()
 
     @staticmethod
-    def postfix2infix(postfix):
+    def postfix2infix(postfix): # convert postfix notation to infix notation
         myqueue = copy.copy(postfix)
-        infix_stack= []
+        infix_stack = []
         while not myqueue.isEmpty():
             token = myqueue.dequeue()
             if token in ('+', '-', '*', '/'):
@@ -24,15 +24,15 @@ class StackCalc(Stack):
             elif token == '^':
                 rightOperand = infix_stack.pop()
                 leftOperand = infix_stack.pop()
-                infixSubstring = "(" + leftOperand   + ")**"+ rightOperand
+                infixSubstring = "(" + leftOperand + ")**" + rightOperand
                 infix_stack.append(infixSubstring)
             elif token in ('sin', 'cos', 'exp', 'log', 'abs', 'sqrt'):
                 operand = infix_stack.pop()
                 infixSubstring = token + "(" + operand + ")"
                 infix_stack.append(infixSubstring)
-            elif token in ('pi', 'e'):
+            elif token in ('pi', 'e','x'):
                 infix_stack.append(token)
-            elif token in ('copy','swap'):
+            elif token in ('copy', 'swap'):
                 if token == "copy":
                     infix_stack.append(infix_stack[-1])
                 else:
@@ -44,8 +44,7 @@ class StackCalc(Stack):
                 infix_stack.append(token)
         return infix_stack[-1]
 
-
-    def rpnCommand(self, prompt):
+    def rpnCommand(self, prompt): # read command and calculation
         if prompt in ('swap', 'copy', 'flush'):
             if prompt == 'swap':
                 return self.swap()
@@ -86,4 +85,16 @@ class StackCalc(Stack):
             num = np.pi if prompt == 'pi' else np.e
             return self.push(num)
         else:
-            self.push(float(prompt))
+            return self.push(float(prompt))
+
+    @staticmethod
+    def evaluate_postfix(queue,x=None): # calculate postfix notation and output solution result
+        myqueue = copy.copy(queue)
+        stack = StackCalc()
+        while not myqueue.isEmpty():
+            prompt = myqueue.dequeue()
+            if prompt != 'x':
+                stack.rpnCommand(prompt)
+            else:
+                stack.rpnCommand(x)
+        return stack.peek()
