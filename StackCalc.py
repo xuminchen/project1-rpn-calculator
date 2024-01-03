@@ -12,11 +12,10 @@ class StackCalc(Stack):
 
     @staticmethod
     def postfix2infix(postfix):
-        myqueue = postfix
+        myqueue = copy.copy(postfix)
         infix_stack= []
         while not myqueue.isEmpty():
             token = myqueue.dequeue()
-
             if token in ('+', '-', '*', '/'):
                 rightOperand = infix_stack.pop()
                 leftOperand = infix_stack.pop()
@@ -33,10 +32,17 @@ class StackCalc(Stack):
                 infix_stack.append(infixSubstring)
             elif token in ('pi', 'e'):
                 infix_stack.append(token)
+            elif token in ('copy','swap'):
+                if token == "copy":
+                    infix_stack.append(infix_stack[-1])
+                else:
+                    num_1 = infix_stack.pop()
+                    num_2 = infix_stack.pop()
+                    infix_stack.append(num_1)
+                    infix_stack.append(num_2)
             else:
                 infix_stack.append(token)
-
-        return infix_stack[0]
+        return infix_stack[-1]
 
 
     def rpnCommand(self, prompt):

@@ -31,8 +31,7 @@ class Stack:
         return self.push(self.__stack[-1])
 
     def flush(self):
-        for i in range(self.getSize()):
-            self.pop()
+        self.__stack = []
         return None
 
     def pop(self):  # pop the item
